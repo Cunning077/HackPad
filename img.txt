@@ -1,0 +1,60 @@
+#include <Arduino.h>
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_GC9A01A.h>
+#include "HP_IMG1.h"
+#include "HP_IMG2.h"
+
+// Shared TFT pins
+#define TFT_DC   9
+#define TFT_RST  -1
+
+// Since the 74HC138 is handling CS selection,
+// we can use any unused pin here.
+#define TFT_CS   10
+
+Adafruit_GC9A01A tft(TFT_CS, TFT_DC, TFT_RST);
+
+// 74HC138 select pins
+#define SEL_A 7
+#define SEL_B 6
+#define SEL_C 5
+
+void selectDisplay(uint8_t display)
+{
+    digitalWrite(SEL_A, display & 0x01);
+    digitalWrite(SEL_B, (display >> 1) & 0x01);
+    digitalWrite(SEL_C, (display >> 2) & 0x01);
+
+    // Allow the decoder output to settle
+    delay(1);
+}
+
+void setup()
+{
+    pinMode(SEL_A, OUTPUT);
+    pinMode(SEL_B, OUTPUT);
+    pinMode(SEL_C, OUTPUT);
+
+    // Initialize display 0
+    selectDisplay(0);
+    tft.begin();
+
+
+    // Initialize display 1
+    selectDisplay(2);
+    tft.begin();
+    
+    selectDisplay(0);
+    tft.fillScreen(GC9A01A_BLACK);
+    tft.drawRGBBitmap(88,88,HP_IMG1, 64, 64);
+
+    selectDisplay(2);
+    tft.fillScreen(GC9A01A_BLACK);
+    tft.drawRGBBitmap(88,88,HP_IMG2, 64, 64);
+
+}
+
+void loop()
+{
+}

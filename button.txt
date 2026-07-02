@@ -1,0 +1,13 @@
+#include <Arduino.h>
+int pin = A0;
+int reading = 0;
+
+void setup() {
+    Serial.begin(9600);
+}
+
+void loop() {
+    reading = analogRead(pin);
+    Serial.println(reading);
+    delay(200);
+}
