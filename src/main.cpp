@@ -22,5 +22,5 @@ void loop() {
     Packet packet;
     if (!receivePacket(packet))
         return;
-   resolveCMD(static_cast<Command>(packet.command)); 
+   resolveCMD(static_cast<Command>(packet.command), packet.display); 
 }

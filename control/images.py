@@ -8,14 +8,15 @@ ser = serial.Serial("/dev/ttyACM0", 115200)
 time.sleep(2)
 
 BASE_DIR = Path(__file__).parent
-img = Image.open(BASE_DIR / "images" / "HP_IMG1.png")
+img = Image.open(BASE_DIR / "images" / "HP_IMG2.png")
 img = img.convert("RGB")
 length = 3 + (240 * 240 * 2)
 packet = bytearray()
 packet.append(0x01) 
-packet.append(2)
+packet.append(0)
 packet.append(240)
-packet.append(101)
+packet.append(240)
+packet.append(1)
 print(packet)
 ser.write(packet)
 width, height = img.size

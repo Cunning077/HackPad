@@ -25,21 +25,23 @@ void selectDisplay(uint8_t display) {
     delay(1);
 }
 
-void receiveImage() {
-    if (!waitForPayload(3)) {
+void receiveImage(uint8_t display) {
+    if (!waitForPayload(2)) {
         Serial.println("Flushing Payload");
 
         return;
     }
-    uint8_t display = Serial.read();
     uint8_t width = Serial.read();
     uint8_t height = Serial.read();
+    uint8_t rotation = Serial.read();
     Serial.print("Display: ");
     Serial.print(display);
     Serial.print(" Width: ");
     Serial.print(width);
     Serial.print(" Height: ");
     Serial.println(height);
+    Serial.println("Rotation: ");
+    Serial.println(rotation);
     uint32_t expectedPixels = (uint32_t)width * height;
     uint16_t bytesToRead = expectedPixels;
     Serial.println(expectedPixels);
@@ -50,7 +52,7 @@ void receiveImage() {
     Serial.println(x);
     Serial.println("Y");
     Serial.println(y);
-    tft.setRotation(0);
+    tft.setRotation(rotation);
     tft.startWrite();
     tft.setAddrWindow(x, y, width, height);
     uint32_t bytesRead = 0;
@@ -76,38 +78,49 @@ void receiveImage() {
     tft.endWrite();
 }
 
-void clearDisplay() {
-    if (!waitForPayload(1))
-        return;
-    uint8_t display = Serial.read();
+void clearDisplay(uint8_t display) {
     Serial.print("Display: ");
     Serial.println(display);
     selectDisplay(display);
     tft.fillScreen(GC9A01A_BLACK);
 }
-/*
-void displayText() {
-    if (!waitForPayload(length))
+
+void displayText(uint8_t display) {
+    Serial.println("Attempting Text");
+    if (!waitForPayload(3))
         return;   
-    uint8_t display = Serial.read();
+    Serial.println("Payload Received");
     uint8_t x = Serial.read();
     uint8_t y = Serial.read();
-    uint16_t textLength = length - 3;
+    uint16_t textLength = Serial.read();
+    Serial.println("display:");
+    Serial.println(display);
+    Serial.println("x:");
+    Serial.println(x);
+    Serial.println("y:");
+    Serial.println(y);
+    Serial.println("Text Length");
+    Serial.println(textLength);
     char text[128];
     if (textLength >= sizeof(text))
         textLength = sizeof(text) - 1;
+    if (!waitForPayload(textLength)) {
+        Serial.println("Text failed to retrieve");
+        flushPayload(textLength);
+        return;
+    }
     Serial.readBytes(text, textLength);
     text[textLength] = '\0';
     selectDisplay(display);
+    Serial.println(text);
+    tft.setTextColor(GC9A01A_WHITE);
     tft.setCursor(x, y);
+    tft.setTextSize(2);
     tft.print(text);
 }
-*/
 
-void displayTest() {
-    if (!waitForPayload(1))
-        return;
-    uint8_t display = Serial.read();
+
+void displayTest(uint8_t display) {
     selectDisplay(display);
     for (int i = 0; i < 5; i++) {
         tft.fillScreen(GC9A01A_RED);
@@ -123,10 +136,9 @@ void displayTest() {
     
 }
 
-void displayFillScreen() {
-    if (!waitForPayload(3))
+void displayFillScreen(uint8_t display) {
+    if (!waitForPayload(2))
         return;
-    uint8_t display = Serial.read();
     uint16_t color = (Serial.read() << 8);
     color |= Serial.read();
     selectDisplay(display);

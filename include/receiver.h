@@ -4,6 +4,7 @@
 
 struct Packet {
     uint8_t command;
+    uint8_t display;
 };
 
 bool receivePacket(Packet &packet);

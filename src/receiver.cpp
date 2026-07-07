@@ -1,9 +1,10 @@
 #include "receiver.h"
 
 bool receivePacket(Packet &packet) {
-    if (Serial.available() < 3)
+    if (Serial.available() < 2)
         return false;
     packet.command = Serial.read();
+    packet.display = Serial.read();
     Serial.println("Packet Detected");
     return true;
 }
