@@ -4,13 +4,16 @@
 
 
 enum Command : uint8_t {
-    CMD_DRAW_IMAGE = 0x01,
-    CMD_CLEAR_DISPLAY = 0x02,
-    CMD_DISPLAY_TEST = 0x03,
-    CMD_DRAW_TEXT = 0x04,
-    CMD_FILL_SCREEN = 0x05
+    CMD_HANDSHAKE = 0x00,
+    CMD_HANDSHAKE_ACK = 0x01,
+    CMD_HEARTBEAT = 0x02,
+    CMD_DRAW_IMAGE = 0x03,
+    CMD_CLEAR_DISPLAY = 0x04,
+    CMD_DISPLAY_TEST = 0x05,
+    CMD_DRAW_TEXT = 0x06,
+    CMD_FILL_SCREEN = 0x07
 };
 
-void resolveCMD(Command cmd, uint8_t display);
+void resolveCMD(uint8_t cmd, uint8_t display);
 #endif
 

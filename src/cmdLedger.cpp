@@ -1,31 +1,36 @@
 #include "cmdLedger.h"
 #include "display.h"
+#include "receiver.h"
 
 
-void resolveCMD(Command cmd, uint8_t display) {
+void resolveCMD(uint8_t cmd, uint8_t display) {
     switch (cmd) {
         case CMD_DRAW_IMAGE:
-            Serial.println("Draw Image Requested");
+            serialState = SerialBusy;
+            Serial.write(0x03)
             receiveImage(display);
             break;
         case CMD_CLEAR_DISPLAY:
-            Serial.println("Clear Display Requested");
+            serialState = SerialBusy;
+            Serial.write(0x04)
             clearDisplay(display);
             break;
         case CMD_DISPLAY_TEST:
-            Serial.println("Display Test Requested");
+            serialState = SerialBusy;
+            Serial.write(0x05)
             displayTest(display);
             break;
         case CMD_DRAW_TEXT:
-            Serial.println("Draw Text Requested");
+            serialState = SerialBusy;
+            Serial.write(0x06)
             displayText(display); 
             break;
         case CMD_FILL_SCREEN:
-            Serial.println("Fill Screen Requested");
+            serialState = SerialBusy;
+            Serial.write(0x07)
             displayFillScreen(display);
             break;
         default:
-            Serial.print("Uknown Command: ");
             Serial.println(cmd);
             break;
     }
