@@ -1,10 +1,14 @@
 #include "receiver.h"
 #include "boardInfo.h"
+#include "debugger.h"
+#include "cmdLedger.h"
 
 ConnectionState connectionState = DISCONNECTED;
+SerialState serialState = SerialIdle; 
 
 bool receivePacket(Packet &packet) {
     if (Serial.available() < 2)
+
         return false;
     packet.command = Serial.read();
     packet.display = Serial.read();
@@ -14,8 +18,7 @@ bool receivePacket(Packet &packet) {
 bool waitForPayload(uint16_t length) {
     unsigned long start = millis();
     while (Serial.available() < length) {
-        if (millis() - start > 1000) {
-            Serial.println("Timeout");
+        if (millis() - start > 5000) {
             return false;
         }
     }
@@ -29,20 +32,23 @@ bool waitForPayload(uint16_t length) {
      }
  }
 
-void resolveConnection(ConnectionState connectionState) {
+void resolveConnection() {
     switch (connectionState) {
         case DISCONNECTED:
             break;
         case HANDSHAKE: {
+            if (!waitForPayload(1)) {
+                return;
+            } 
             bool success = Serial.read();
-            serialState = SerialIdle
+            serialState = SerialIdle;
             if (success) { 
                 connectionState = CONNECTED;
-                Serial.write(static_cast<uint8_t>(1));
+                Serial.write(CMD_HANDSHAKE_ACK);
             }
             else {
                 connectionState = DISCONNECTED;
-                Serial.write(static_cast<uint8_t>(0));
+                Serial.write(CMD_HANDSHAKE_ACK);
             }
             break;
         }
@@ -59,9 +65,11 @@ void sendHandshake() {
     connectionState = HANDSHAKE; 
 }
 
-void checkSerialState() {
+bool checkSerialState() {
     if (serialState == SerialIdle) {
+
         return true;
     }
+
     return false;
 }

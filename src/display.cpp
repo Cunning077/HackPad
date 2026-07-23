@@ -1,6 +1,7 @@
 #include <display.h>
 #include <Arduino.h>
 #include "receiver.h"
+#include "debugger.h"
 
 #define SEL_A 7
 #define SEL_B 6
@@ -26,56 +27,47 @@ void selectDisplay(uint8_t display) {
 }
 
 void receiveImage(uint8_t display) {
-    if (!waitForPayload(2)) {
-        Serial.println("Flushing Payload");
-
+    delay(100);
+    if (!waitForPayload(3)) {
         return;
     }
     uint8_t width = Serial.read();
     uint8_t height = Serial.read();
     uint8_t rotation = Serial.read();
-    Serial.print("Display: ");
-    Serial.print(display);
-    Serial.print(" Width: ");
-    Serial.print(width);
-    Serial.print(" Height: ");
-    Serial.println(height);
-    Serial.println("Rotation: ");
-    Serial.println(rotation);
     uint32_t expectedPixels = (uint32_t)width * height;
-    uint16_t bytesToRead = expectedPixels;
-    Serial.println(expectedPixels);
-    selectDisplay(display);
+    uint32_t bytesToRead = expectedPixels * 2;
+    selectDisplay(display);  
     int16_t x = (240 - width) / 2;
     int16_t y = (240 - height) / 2;
-    Serial.println("X");
-    Serial.println(x);
-    Serial.println("Y");
-    Serial.println(y);
     tft.setRotation(rotation);
     tft.startWrite();
     tft.setAddrWindow(x, y, width, height);
-    uint32_t bytesRead = 0;
-    for (uint32_t i = 0; i < expectedPixels; i++) {
-        if (!waitForPayload(2)) {
-            Serial.println("Pixels Failed To Retrieve");
-            Serial.println("Bytes Read");
-            Serial.println(bytesRead);
-            flushPayload(bytesToRead * 2);
+    uint8_t buffer[48];
+    uint32_t bytesConsumed = 0;
+    while (bytesToRead > 0) {
+        uint16_t chunk = min(bytesToRead, sizeof(buffer));
+        if (!waitForPayload(chunk)) {
+            Serial.println("Bytes Left");
+            Serial.println(bytesToRead);
+            flushPayload(bytesToRead);
             tft.endWrite();
             return;
         }
-        uint8_t hi = Serial.read();
-        bytesRead++;
-        uint8_t lo = Serial.read();
-        bytesRead++;
-        uint16_t pixel = (hi << 8) | lo;
-        tft.writeColor(pixel, 1);
-        bytesToRead--;
+        Serial.readBytes((char*)buffer, chunk);
+        for (uint16_t i = 0; i < chunk; i +=2) {
+            uint16_t pixel = (buffer[i] << 8) | buffer[i + 1];
+            bytesConsumed += 2;
+            tft.writeColor(pixel, 1);
+        }
+        bytesToRead -= chunk;
     }
-    Serial.print("Bytes To Read");
-    Serial.println(bytesToRead);
     tft.endWrite();
+    setColor(1,1,1);
+    if (bytesConsumed == expectedPixels * 2) {
+        setColor(0,1,0);
+    }
+
+
 }
 
 void clearDisplay(uint8_t display) {
@@ -121,6 +113,7 @@ void displayText(uint8_t display) {
 
 
 void displayTest(uint8_t display) {
+    setColor(1,1,1);
     selectDisplay(display);
     for (int i = 0; i < 5; i++) {
         tft.fillScreen(GC9A01A_RED);

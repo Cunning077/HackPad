@@ -20,8 +20,8 @@ class SerialManager:
     def connect(self, port):
         try:
             self.serial = Serial(port.device, baudrate=115200, timeout=1)
+            time.sleep(3)
             self.connected = True
-            print("attempting connect")
             return True
         except Exception:
             self.connected = False
@@ -58,6 +58,7 @@ class SerialManager:
             return False
         try:
             self.serial.write(data)
+            self.serial.flush()
             return True
         except Exception:
             return self.reconnect()

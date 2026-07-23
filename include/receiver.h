@@ -13,16 +13,16 @@ enum ConnectionState {
     CONNECTED
 };
 
-enum serialState {
+enum SerialState {
     SerialBusy,
     SerialIdle
 };
-SerialState serialState = SerialIdle;
+extern SerialState serialState;
 extern ConnectionState connectionState;
 bool receivePacket(Packet &packet);
 bool waitForPayload(uint16_t length);
 void flushPayload(uint16_t bytes);
-void resolveConnection(ConnectionState connectionState);
+void resolveConnection();
 void sendHandshake();
-void checkSerialState();
+bool checkSerialState();
 #endif
