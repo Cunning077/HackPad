@@ -54,8 +54,6 @@ class SerialManager:
     def write(self, data):
         if not self.is_connected():
             return False
-        if self.busy:
-            return False
         try:
             self.serial.write(data)
             self.serial.flush()

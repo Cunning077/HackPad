@@ -17,11 +17,11 @@ class Handshake:
         time.sleep(2)
         
 
-        response = self.manager.read(9)
+        response = self.manager.read(8)
         print(response)
         if response is None:
             return False
-        if len(response) != 9:
+        if len(response) != 8:
             return False
         magic = response[0:4].decode("ascii")
         if magic != "MBRD":
@@ -31,9 +31,14 @@ class Handshake:
         protocol = response[4]
         firmware_major = response[5]
         firmware_minor = response[6]
-        self.displays = response[7]
-        print(self.displays)
-        self.buttons = response[8]
+        numDisplays = response[7]
+        response = self.manager.read(numDisplays + 1)
+        print(response)
+        disp = []
+        for i in range(numDisplays):
+            disp.append(response[i])
+        self.displays = disp
+        self.buttons = response[numDisplays]
         if protocol != 1:
             return False
         

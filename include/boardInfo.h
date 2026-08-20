@@ -8,6 +8,7 @@ struct BoardInfo {
     uint8_t firmwareMajor;
     uint8_t firmwareMinor;
     uint8_t displayCount;
+    uint8_t displays[2];
     uint8_t buttonCount;
 };
 extern const BoardInfo BOARD_INFO;

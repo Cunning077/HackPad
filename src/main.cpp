@@ -6,6 +6,7 @@
 #include "receiver.h"
 #include "debugger.h"
 #include "queue.h"
+#include "buttons.h"
 
 
 #define TFT_DC 9
@@ -21,25 +22,33 @@ void setup() {
    Serial.begin(115200);
    initDebugger(LED_R, LED_G, LED_B);
    initSelPin();
-   initDisplay(1);
+   initDisplay(2);
    initDisplay(0);
 }
 
 void loop() {
+    setColor(0,1,0);
+    readButtons();
     resolveConnection();
+    readButtons();
 
 
     Packet packet;
     if (receivePacket(packet)) {
+        setColor(1,0,0);
         switch (packet.command) {
             case CMD_HANDSHAKE:
                 serialState = SerialBusy;
+                readButtons();
                 sendHandshake();
                 return;
 
         }
         if (connectionState == CONNECTED) {
+            setColor(1,0,0);
             Queue.push(packet);
+            Serial.write(packet.command);
+            readButtons();
             delay(1);
         }
     }
@@ -47,7 +56,8 @@ void loop() {
     if (connectionState == CONNECTED) {
         if (!Queue.empty()) {
             if (Queue.pop(packet)) {
-                resolveCMD(packet.command, packet.display);
+                readButtons();
+                resolveCMD(packet.command, packet.cmdId);
             }
         }
     }

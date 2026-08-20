@@ -9,7 +9,7 @@ class Service:
     def __init__(self):
         self.serial = SerialManager()
         self.handshake = Handshake(self.serial)
-        self.commands = Commands(self.serial, self.handshake)
+        self.commands = Commands(self.serial, self.handshake, firstStageQueue, secondStageQueue)
         SerialStatus.display_init = False
 
     def run(self):
@@ -31,8 +31,17 @@ class Service:
                 if not SerialStatus.display_init:
                     self.commands.loadStartImages()
                     SerialStatus.display_init = True
-
-        #adds continued functionality here like heartbeats and handling service commands etc
+                cmd = self.commands.receiveCommands() #from gui or user on pc
+                if cmd:
+                    print("Command pushed to first queue")
+                    firstStageQueue.push(cmd) 
+                    continue
+                incoming = self.commands.readIncoming()
+                if incoming:
+                    self.commands.resolveCMD(incoming)
+                if not firstStageQueue.empty():
+                    print("queue wasnt empty")
+                    self.commands.resolveFirstStageCmd()
 
 if __name__ == "__main__":
     service = Service()

@@ -4,7 +4,7 @@
 
 struct Packet {
     uint8_t command;
-    uint8_t display;
+    uint8_t cmdId;
 };
 
 enum ConnectionState {

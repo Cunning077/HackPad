@@ -2,22 +2,23 @@
 #include "boardInfo.h"
 #include "debugger.h"
 #include "cmdLedger.h"
+#include "buttons.h"
 
 ConnectionState connectionState = DISCONNECTED;
 SerialState serialState = SerialIdle; 
 
 bool receivePacket(Packet &packet) {
-    if (Serial.available() < 2)
-
+    if (Serial.available() < 2) 
         return false;
     packet.command = Serial.read();
-    packet.display = Serial.read();
+    packet.cmdId = Serial.read();
     return true;
 }
 
 bool waitForPayload(uint16_t length) {
     unsigned long start = millis();
     while (Serial.available() < length) {
+        readButtons();
         if (millis() - start > 5000) {
             return false;
         }

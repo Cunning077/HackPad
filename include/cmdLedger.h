@@ -14,6 +14,6 @@ enum Command : uint8_t {
     CMD_FILL_SCREEN = 0x07
 };
 
-void resolveCMD(uint8_t cmd, uint8_t display);
+void resolveCMD(uint8_t cmd, uint8_t cmdId);
 #endif
 

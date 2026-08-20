@@ -25,11 +25,13 @@ class commandDict():
 
     def addCMD(self, command):
         self.PendingCmd[self.idCount] = command
-        idCount += 1
+        self.idCount += 1
 
     def popCMD(self, CMDID):
         poppedCMD = self.PendingCmd.pop(CMDID, False)
         return poppedCMD
 
+
+
 firstStageQueue = commandQueue()
-secondStageQueue = commandQueue()
+secondStageQueue = commandDict()
