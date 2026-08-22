@@ -44,7 +44,7 @@ void receiveImage() {
     tft.setRotation(rotation);
     tft.startWrite();
     tft.setAddrWindow(x, y, width, height);
-
+    uint8_t buffer[48];
     uint32_t bytesConsumed = 0;
     readButtons();
     while (bytesToRead > 0) {

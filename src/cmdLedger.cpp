@@ -12,6 +12,7 @@ void resolveCMD(uint8_t cmd, uint8_t cmdId) {
             Serial.write(cmdId);
             receiveImage();
             Serial.write(0x03);
+            serialState = SerialIdle;
             break;
         case CMD_CLEAR_DISPLAY:
             serialState = SerialBusy;
@@ -19,6 +20,7 @@ void resolveCMD(uint8_t cmd, uint8_t cmdId) {
             Serial.write(cmdId);
             clearDisplay();
             Serial.write(0x04);
+            serialState = SerialIdle;
             break;
         case CMD_DISPLAY_TEST:
             serialState = SerialBusy;
@@ -26,6 +28,7 @@ void resolveCMD(uint8_t cmd, uint8_t cmdId) {
             Serial.write(cmdId);
             displayTest();
             Serial.write(0x05);
+            serialState = SerialIdle;
             break;
         case CMD_DRAW_TEXT:
             serialState = SerialBusy;
@@ -33,6 +36,7 @@ void resolveCMD(uint8_t cmd, uint8_t cmdId) {
             Serial.write(cmdId);
             displayText(); 
             Serial.write(0x06);
+            serialState = SerialIdle;
             break;
         case CMD_FILL_SCREEN:
             serialState = SerialBusy;
@@ -40,7 +44,25 @@ void resolveCMD(uint8_t cmd, uint8_t cmdId) {
             Serial.write(cmdId);
             displayFillScreen();
             Serial.write(0x07);
+            serialState = SerialIdle;
             break;
+        case CMD_BTN_PRESS: {
+            setColor(1,1,0);
+            serialState = SerialBusy;
+            Serial.write(0x08);
+            Serial.write(cmdId);
+            delay(1);
+            if (!waitForPayload(1)) {
+                setColor(1,1,0);
+                delay(2000);
+                return;
+            }
+            uint8_t resp = Serial.read();
+            if (resp != CMD_BTN_PRESS) {
+                setColor(0,1,0);
+            }
+            serialState = SerialIdle;
+        }
         default:
             break;
     }

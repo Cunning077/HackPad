@@ -11,7 +11,8 @@ enum Command : uint8_t {
     CMD_CLEAR_DISPLAY = 0x04,
     CMD_DISPLAY_TEST = 0x05,
     CMD_DRAW_TEXT = 0x06,
-    CMD_FILL_SCREEN = 0x07
+    CMD_FILL_SCREEN = 0x07,
+    CMD_BTN_PRESS = 0x08
 };
 
 void resolveCMD(uint8_t cmd, uint8_t cmdId);

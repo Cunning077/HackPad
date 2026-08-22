@@ -13,6 +13,7 @@ class Service:
         SerialStatus.display_init = False
 
     def run(self):
+        cmd = None
         while True:
             if not self.serial.is_connected():
                 for port in self.serial.get_ports():
@@ -31,17 +32,20 @@ class Service:
                 if not SerialStatus.display_init:
                     self.commands.loadStartImages()
                     SerialStatus.display_init = True
-                cmd = self.commands.receiveCommands() #from gui or user on pc
+
                 if cmd:
                     print("Command pushed to first queue")
                     firstStageQueue.push(cmd) 
                     continue
                 incoming = self.commands.readIncoming()
                 if incoming:
+                    print("incoming detected")
+                    print(incoming)
                     self.commands.resolveCMD(incoming)
                 if not firstStageQueue.empty():
                     print("queue wasnt empty")
                     self.commands.resolveFirstStageCmd()
+                cmd = self.commands.receiveCommands() #from gui or user on pc
 
 if __name__ == "__main__":
     service = Service()

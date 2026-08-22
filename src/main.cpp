@@ -27,7 +27,6 @@ void setup() {
 }
 
 void loop() {
-    setColor(0,1,0);
     readButtons();
     resolveConnection();
     readButtons();
@@ -35,7 +34,6 @@ void loop() {
 
     Packet packet;
     if (receivePacket(packet)) {
-        setColor(1,0,0);
         switch (packet.command) {
             case CMD_HANDSHAKE:
                 serialState = SerialBusy;
@@ -45,7 +43,7 @@ void loop() {
 
         }
         if (connectionState == CONNECTED) {
-            setColor(1,0,0);
+            setColor(1,1,0);
             Queue.push(packet);
             Serial.write(packet.command);
             readButtons();

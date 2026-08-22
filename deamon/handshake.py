@@ -45,7 +45,6 @@ class Handshake:
         packet = bytearray()
         packet.append(CMD_HANDSHAKE_ACK)
         self.manager.write(packet)
-
         response = self.manager.read(1)
         print("RESP:",response[0])
         if response is None or len(response) != 1:

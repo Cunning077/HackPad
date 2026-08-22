@@ -1,6 +1,7 @@
 from PIL import Image
 from pathlib import Path
 import time
+import subprocess
 
 from protocol import Command, commandList
 from colors import Colors
@@ -160,6 +161,19 @@ class Commands:
         #here i want to sample pop whatever cmd is at the top of the firstStageQueue during a time when the serial isnt busy on either end i need confirmation from the arduino its been received to get success
 
     def resolveCMD(self, receivedBit):
+        #resolve special commands
+        if receivedBit:
+            match receivedBit[0]:
+                case 0x08:
+                    print("Buttons press cmd")
+                    self.manager.busy = True
+                    button_num = receivedBit[1]
+                    self.execute_button(button_num)
+                    packet = bytearray()
+                    packet.append(0x08)
+                    self.manager.write(packet)
+                    self.manager.busy = False
+                    return
         """
         if receivedBit == 0x02:
             #heartbeatCommand
@@ -217,6 +231,15 @@ class Commands:
                     return
                     #unknown cmd shouldnt ever happen
 
+
+    def execute_button(self, button_id):
+        file =  (self.base_dir / "buttons" / f"button{button_id}.sh")
+        print(file)
+
+        if file.exists():
+            subprocess.Popen(["bash", str(file)])
+        else:
+            print(f"No file assigned to button {button_id}")
 
     def displayImage(self, img_filename, display):
         rotation = 1
