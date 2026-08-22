@@ -1,7 +1,4 @@
-
-![Prototype Screens](assets/image0(1).jpeg)
-![Cad Image](assets/cadimg.png)
-![Pcb Im# Oled Display Hackpad
+# Oled Display Hackpad
 
 A differing design hackpad allowing customization at a cost effective way, complete with an advanced event handler and a system that makes use of computer hardware to perform complicated tasks on a budget microcontroller.
 
@@ -39,4 +36,4 @@ Software is broken down into the macro boards logic and the communication/event 
  - Microcontroller of choice 
  - 2 printed parts + 5 rectangular bits
 
-See https://stardance.hackclub.com/projects/10218/devlogs/11779 for a detailed construction of the circuit on a bread board.age](assets/pcbimg.png)
+See https://stardance.hackclub.com/projects/10218/devlogs/11779 for a detailed construction of the circuit on a bread board.
