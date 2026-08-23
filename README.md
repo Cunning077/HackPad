@@ -18,7 +18,7 @@ The hackpad comes in 3 pieces, the PCB, the top case, and the bottom, the pcb is
 
 ## PCB
 Pcb made in kicad
-![Schematic](assets/pcbschem.png)
+![Schematic](assets/PcbSchem.png)
 ![Pcb Image](assets/pcbimg.png)
 
 ## Firmware + Software
@@ -36,4 +36,17 @@ Software is broken down into the macro boards logic and the communication/event 
  - Microcontroller of choice 
  - 2 printed parts + 5 rectangular bits
 
+|  Part| Price | Quantity |
+|--|--|--|
+|XIAO Seed Studio|$5.40|1|
+|1.28 TFT Display|$6.00|6|
+|4.5mm outer 6mm depth heat insert| $0.03|4|
+|4.5mm outer 4mm depth heat insert|$0.03|5|
+|Resistor set|$10.00|6|
+|74HC138 circuit|$3.00|1|
+|Cherry MX Switch|$0.5|6|
+
+
+
 See https://stardance.hackclub.com/projects/10218/devlogs/11779 for a detailed construction of the circuit on a bread board.
+
