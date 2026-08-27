@@ -42,7 +42,7 @@ Software is broken down into the macro boards logic and the communication/event 
 |1.28 TFT Display|$6.00|6|
 |4.5mm outer 6mm depth heat insert| $0.03|4|
 |4.5mm outer 4mm depth heat insert|$0.03|5|
-|Resistor set|$10.00|6|
+|Resistor set|$10.00|1|
 |74HC138 circuit|$3.00|1|
 |Cherry MX Switch|$0.5|6|
 
