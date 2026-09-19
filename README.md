@@ -14,7 +14,7 @@ A differing design hackpad allowing customization at a cost effective way, compl
 ## Cad
 The hackpad comes in 3 pieces, the PCB, the top case, and the bottom, the pcb is fastened into the bottom through 5 rectangular blocks that screw into the sides of the bottom section case, the top and bottom are fastened together with 4 screws.
 ![Cad Image](assets/cadimg.png)
-(No current design for the case, if its popular maybe i will do one)
+(No current design for the case as in cosmetic look, if its popular maybe i will do one)
 
 ## PCB
 Pcb made in kicad
@@ -45,6 +45,7 @@ Software is broken down into the macro boards logic and the communication/event 
 |Resistor set|$10.00|1|
 |74HC138 circuit|$3.00|1|
 |Cherry MX Switch|$0.5|6|
+|Total|$48.67|Null|
 
 
 
